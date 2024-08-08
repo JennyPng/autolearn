@@ -8,7 +8,7 @@ class Schedule:
         
         def __repr__(self):
             return (f"Assignment(title={self.title!r}, estimated_time={self.estimated_time!r}, "
-                    f"youtube_queries={self.youtube_queries!r}, learning_goals={self.learning_goals!r})")
+                    f"youtube_queries={self.youtube_queries!r}, learning_goals={self.learning_goals!r})\n")
 
     class Week:
         def __init__(self, week_index, topic, assignments, youtube_queries) -> None:
@@ -19,7 +19,7 @@ class Schedule:
 
         def __repr__(self):
             return (f"Week(week_index={self.week_index!r}, topic={self.topic!r}, "
-                    f"assignments={self.assignments!r}, youtube_queries={self.youtube_queries!r})")
+                    f"assignments={self.assignments!r}, youtube_queries={self.youtube_queries!r})\n")
 
     def __init__(self, weeks) -> None:
         self.weeks = [self.Week(**week) for week in weeks]
