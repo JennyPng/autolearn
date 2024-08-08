@@ -4,7 +4,6 @@ from openai import OpenAI
 import json
 from schedule import Schedule
 from testdata import sample_input
-# from nltk.tokenize import sent_tokenize
 
 client = OpenAI()
 
@@ -33,5 +32,7 @@ def query(content: str) -> Schedule :
   weeks = res["weeks"]
 
   sched = Schedule(**res)
+
+  print(sched)
 
   return sched
