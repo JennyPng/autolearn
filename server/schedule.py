@@ -22,6 +22,7 @@ class Schedule:
                     f"assignments={self.assignments!r}, youtube_queries={self.youtube_queries!r})\n")
 
     def __init__(self, weeks) -> None:
+        self.raw = weeks
         self.weeks = [self.Week(**week) for week in weeks]
 
     def __repr__(self):

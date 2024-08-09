@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request, jsonify
+from controller import get_schedule
  
 app = Flask(__name__)
  
@@ -10,6 +11,19 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World'
  
+@app.route('/generate', methods=["GET"])
+def generate():
+    # content = request.json['content']
+    param = request.args.get('param', default="nlp")
+    sched = get_schedule(param)
+
+    response = {
+        "message": "idk",
+        "param": param,
+        "val": sched.weeks[0].topic
+    }
+    return jsonify(response)
+
 # main driver function
 if __name__ == '__main__':
  

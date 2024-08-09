@@ -5,7 +5,7 @@ from testdata import sample_input
 
 client = OpenAI()
 
-test_flag = False
+test_flag = True
 
 def query(content: str) -> Schedule :
   if not test_flag:
@@ -26,10 +26,10 @@ def query(content: str) -> Schedule :
     c = sample_input
   res = json.loads(c)
 
-  print(res)
+  # print(res)
 
   sched = Schedule(**res)
 
-  print(sched)
+  # print(sched)
 
   return sched
