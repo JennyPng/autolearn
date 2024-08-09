@@ -3,7 +3,6 @@ from analyze import query
 from video_finder import youtube_search2
 from schedule import Schedule
 
-
 def get_schedule(content):
     sched : Schedule = query("Create a 3 week independent self-learning schedule about:" + content)
 
@@ -21,5 +20,8 @@ def get_schedule(content):
                 youtube_search2(hm)
             print()
     return sched
+
+get_schedule("hi")
+
 
 

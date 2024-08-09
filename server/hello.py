@@ -22,6 +22,8 @@ def generate():
         "param": param,
         "val": sched.weeks[0].topic
     }
+
+    print(response)
     return jsonify(response)
 
 # main driver function
