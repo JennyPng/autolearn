@@ -1,25 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+import axios from 'axios';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import CourseForm from './components/CourseForm';
+import Schedule from './pages/Schedule';
+import { ChakraProvider } from '@chakra-ui/react'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider>
+
+    <Router>
+      <Routes>
+        <Route path="/" element={<CourseForm />} />
+        <Route path="/schedule" element={<Schedule />} />
+      </Routes>
+    </Router>
+    </ChakraProvider>
   );
 }
 

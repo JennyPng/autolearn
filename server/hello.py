@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+
 from controller import get_schedule
  
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes and origins
  
 # The route() function of the Flask class is a decorator, 
 # which tells the application which URL should call 
@@ -18,9 +21,8 @@ def generate():
     sched = get_schedule(param)
 
     response = {
-        "message": "idk",
         "param": param,
-        "val": sched.weeks[0].topic
+        "weeks": sched.weeks
     }
 
     print(response)

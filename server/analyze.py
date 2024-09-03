@@ -6,6 +6,7 @@ from testdata import sample_input
 client = OpenAI()
 
 test_flag = True
+# test_flag = False
 
 def query(content: str) -> Schedule :
   if not test_flag:

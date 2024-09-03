@@ -3,14 +3,16 @@ import os
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from dotenv import load_dotenv
+from testdata import sample_search_result
 
 load_dotenv()
 
 DEVELOPER_KEY = os.getenv('YOUTUBE_API_KEY')
 YOUTUBE_API_SERVICE_NAME = 'youtube'
-YOUTUBE_API_VERSION = 'v3'
+YOUTUBE_API_VERSION = 'v3' 
 
-test_flag = False
+test_flag = True
+# test_flag = False
 
 def youtube_search(options):
   youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
@@ -63,13 +65,11 @@ def youtube_search2(query, maxResults=3):
         print('An HTTP error %d occurred:\n%s' % (e.resp.status, e.content))
         return []
   else:
-    # search_response =  
-    ...
+    search_response =  sample_search_result
 
-#   print(search_response)
   videos = []
 
-  # Add each result to the appropriate list, and then display the lists of
+  # Add each result to the appropriate list, and then display the lists of 
   # matching videos, channels, and playlists.
   for search_result in search_response.get('items', []):
     if search_result['id']['kind'] == 'youtube#video':
