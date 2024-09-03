@@ -19,10 +19,11 @@ def generate():
     # content = request.json['content']
     param = request.args.get('param', default="nlp")
     sched = get_schedule(param)
+    sched_dict = sched.to_dict()
 
     response = {
         "param": param,
-        "weeks": sched.weeks
+        "schedule": sched_dict
     }
 
     print(response)

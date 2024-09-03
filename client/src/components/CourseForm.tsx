@@ -19,13 +19,13 @@ export interface CourseFormState {
   desc: string;
   level: string;
   weeks: number;
-  schedule: any;
+  scheduleResponse: ScheduleResponse | undefined;
 }
 
 // TODO enforce api response type
-interface Schedule {
+export interface ScheduleResponse {
     param: string,
-    weeks: string
+    schedule: any
 }
 
 export default function CourseForm() {
@@ -33,7 +33,7 @@ export default function CourseForm() {
     desc: '',
     level: '',
     weeks: 1,
-    schedule: undefined
+    scheduleResponse: undefined
   });
 
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ export default function CourseForm() {
     e.preventDefault();
 
     try {
-        const res = await axios.get<Schedule>('http://127.0.0.1:8000/generate', {
+        const res = await axios.get<ScheduleResponse>('http://127.0.0.1:8000/generate', {
             params: { param: formData.desc },
           });
 
@@ -70,14 +70,14 @@ export default function CourseForm() {
 
         setFormData({
             ...formData,
-            schedule: res.data
+            scheduleResponse: res.data
         });
 
         navigate('/schedule', {
             state: {
               formData: {
                 ...formData,
-                schedule: res.data
+                scheduleResponse: res.data
               }
             }
           });
