@@ -33,43 +33,23 @@ interface Assignment {
   interface Schedule {
     weeks: Week[];
   }
-  
-const renderAssignment = () => {
-
-}
 
 const renderWeek = (week: Week) => {
-    console.log("weeksss")
     return(
-        <Accordion key={`schedule-week-${week.week_index}`}>
+        <Accordion key={`schedule-week-${week.week_index}`} defaultIndex={[0]} allowMultiple>
         <AccordionItem>
             <h2>
             <AccordionButton>
                 <Box as='span' flex='1' textAlign='left'>
-                    Week {week.week_index}
+                    Week {week.week_index}: {week.topic}
                 </Box>
                 <AccordionIcon />
             </AccordionButton>
             </h2>
             <AccordionPanel pb={4}>
-            {week.topic}
-            </AccordionPanel>
-        </AccordionItem>
-
-        <AccordionItem>
-            <h2>
-            <AccordionButton>
-                <Box as='span' flex='1' textAlign='left'>
-                Section 2 title
-                </Box>
-                <AccordionIcon />
-            </AccordionButton>
-            </h2>
-            <AccordionPanel pb={4}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-            commodo consequat.
+                {week.assignments.map((hw) => {
+                    return hw.title + ": " + hw.learning_goals
+                })}
             </AccordionPanel>
         </AccordionItem>
         </Accordion>
@@ -98,10 +78,10 @@ export default function Schedule() {
         {
             schedule.weeks.length > 0 ? (
                 schedule.weeks.map((week : Week) => {
-                    renderWeek(week)
+                    return renderWeek(week)           
                 })
             ) : (
-                <div>Failed</div>
+                <div>Failed to generate schedule</div>
             )
         }
         </>
