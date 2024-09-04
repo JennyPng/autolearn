@@ -4,12 +4,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CourseForm from './components/CourseForm';
 import Schedule from './pages/Schedule';
 import { ChakraProvider, Heading } from '@chakra-ui/react'
+import NavBar from './components/NavBar';
 
 function App() {
   return (
     <ChakraProvider>
-    <Heading>autolearn</Heading>
     <Router>
+      <NavBar/>
       <Routes>
         <Route path="/" element={<CourseForm />} />
         <Route path="/schedule" element={<Schedule />} />

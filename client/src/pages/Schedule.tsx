@@ -1,55 +1,75 @@
-import React from "react";
-import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react'
+import React, { useRef } from "react";
 import {
+    Card,
+    CardBody,
+    Heading,
+    Box,
+    Text,
     Accordion,
     AccordionItem,
     AccordionButton,
     AccordionPanel,
     AccordionIcon,
+    UnorderedList,
+    ListItem,
+    VStack,
+    HStack,
+    Tag,
+    Tabs,
+    TabList,
+    Tab,
+    Flex,
+    Divider
   } from '@chakra-ui/react'
-import { Heading } from "@chakra-ui/react";
-import { Stack } from "@chakra-ui/react";
-import { StackDivider } from "@chakra-ui/react";
-import { Box } from "@chakra-ui/react";
-import { Text } from "@chakra-ui/react";
 import { useLocation } from 'react-router-dom';
 import { CourseFormState, ScheduleResponse } from "../components/CourseForm";
+import { Week, CourseSchedule } from "../types/ScheduleTypes";
 
-// TODO look into pydantic for automated type syncing
-interface Assignment {
-    title: string;
-    estimated_time: number;
-    youtube_queries: string[];
-    learning_goals: string[];
-  }
-  
-  interface Week {
-    week_index: number;
-    topic: string;
-    assignments: Assignment[];
-    youtube_queries: string[];
-  }
-  
-  interface Schedule {
-    weeks: Week[];
-  }
+  // TODO add keys to everything, refactor
+const renderWeek = (week: Week, weekRef: React.RefObject<HTMLDivElement>) => {
+    console.log(week.assignments[0].learning_goals)
 
-const renderWeek = (week: Week) => {
     return(
-        <Accordion key={`schedule-week-${week.week_index}`} defaultIndex={[0]} allowMultiple>
-        <AccordionItem>
+        <Accordion key={`schedule-week-${week.week_index}`} borderWidth={'2px'} defaultIndex={[0]} w={'80%'} allowMultiple>
+        <AccordionItem ref={weekRef}>
             <h2>
             <AccordionButton>
                 <Box as='span' flex='1' textAlign='left'>
-                    Week {week.week_index}: {week.topic}
+                   <Heading as='h2' size='md'> Week {week.week_index}: {week.topic}</Heading>
                 </Box>
                 <AccordionIcon />
             </AccordionButton>
             </h2>
             <AccordionPanel pb={4}>
-                {week.assignments.map((hw) => {
-                    return hw.title + ": " + hw.learning_goals
-                })}
+                <VStack spacing={4} align="stretch">
+                    <Heading as='h3' size='md'>Overview</Heading>
+                    <Text>{week.topic_overview}</Text>
+                    <Text>To learn more, search: </Text>
+                    <HStack spacing={4}>{week.youtube_queries.map((q) => <Tag>{q}</Tag>)}</HStack>
+                    <Divider></Divider>
+                    <Heading as='h3' size='md'>Assignments</Heading>
+                    {week.assignments.map((hw) => {
+                        return (
+                            <Card variant='elevated' padding={'1rem'}>   
+                            <Heading as='h5' size='xs'>
+                            {hw.title}</Heading>
+                            <CardBody>
+                            {
+                                <VStack align='left' spacing={4}>                           
+                                <Text>Learning Goals</Text>
+                                <UnorderedList>
+                                    {hw.learning_goals.map((goal) => <ListItem>{goal}</ListItem>)}
+                                </UnorderedList>
+                                <Text>To learn more, search: </Text>
+                                <HStack spacing={4}>{hw.youtube_queries.map((q) => <Tag>{q}</Tag>)}</HStack>
+                                </VStack>
+                            }
+                        </CardBody>
+                        </Card>
+                        )
+                    })}
+                </VStack>
+     
             </AccordionPanel>
         </AccordionItem>
         </Accordion>
@@ -61,29 +81,60 @@ export default function Schedule() {
     const scheduleResponse : CourseFormState = location.state?.formData;
     
     // Ensure scheduleResponse and its schedule property exist
-    if (!scheduleResponse || !scheduleResponse.scheduleResponse) {
-        return <div>No schedule data available</div>;
-    }
+    // if (!scheduleResponse || !scheduleResponse.scheduleResponse) {
+    //     return <div>No schedule data available</div>;
+    // }
 
     const scheduleData = JSON.stringify(scheduleResponse.scheduleResponse)
     const parsedSchedule : ScheduleResponse = JSON.parse(scheduleData) as ScheduleResponse;
 
     console.log(scheduleData)
 
-    const schedule : Schedule = parsedSchedule.schedule
+    const schedule : CourseSchedule = parsedSchedule.schedule
     console.log(JSON.stringify(schedule.weeks))
 
+  // Create refs for each week
+  // useRef initializes once and doesn't change after renders
+  const weekRefs = useRef<Array<React.RefObject<HTMLDivElement>>>(schedule.weeks.map(() => React.createRef()));
+  
+  const handleTabClick = (index: number) => {
+    const target = weekRefs.current[index].current;
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' }); // TODO how to get scroll right
+       
+        const button = target.querySelector('button');
+      if (button && button.getAttribute('aria-expanded') === 'false') {
+        button.click();
+      }
+    }
+  };
+
     return(
-        <>
+        <Flex h={'100%'}>
+        {/* Table of Contents */}
+        <Box width="200px" bg="gray.50" p={4} borderRight="1px solid #ddd">
+            <Tabs orientation="vertical" variant="soft-rounded" colorScheme="teal"  position="sticky" top={20}>
+            <TabList >
+                {schedule.weeks.map((week, index) => (
+                <Tab key={index} onClick={() => handleTabClick(index)}>
+                    week {week.week_index}
+                </Tab>
+                ))}
+            </TabList>
+            </Tabs>
+        </Box>
         {
             schedule.weeks.length > 0 ? (
-                schedule.weeks.map((week : Week) => {
-                    return renderWeek(week)           
-                })
+                <VStack>
+                {schedule.weeks.map((week : Week, index) => {
+                    return renderWeek(week, weekRefs.current[index])           
+                })}
+                </VStack>
+               
             ) : (
-                <div>Failed to generate schedule</div>
+                <Text>Failed to generate schedule</Text>
             )
         }
-        </>
+        </Flex>
     )
 }

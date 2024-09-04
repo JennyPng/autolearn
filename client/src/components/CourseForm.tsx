@@ -11,9 +11,11 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Select,
+  Progress 
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { CourseSchedule } from '../types/ScheduleTypes';
 
 export interface CourseFormState {
   desc: string;
@@ -24,20 +26,20 @@ export interface CourseFormState {
 
 // TODO enforce api response type
 export interface ScheduleResponse {
-    param: string,
-    schedule: any
+    desc: string,
+    schedule: CourseSchedule
 }
 
 export default function CourseForm() {
+    const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<CourseFormState>({
     desc: '',
     level: '',
-    weeks: 1,
+    weeks: 4,
     scheduleResponse: undefined
   });
 
   const navigate = useNavigate();
-
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -60,14 +62,12 @@ export default function CourseForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
         const res = await axios.get<ScheduleResponse>('http://127.0.0.1:8000/generate', {
-            params: { param: formData.desc },
+            params: { desc: formData.desc, level: formData.level, weeks: formData.weeks },
           });
-
-        console.log('Form submitted successfully:', res.data);
-
+          
         setFormData({
             ...formData,
             scheduleResponse: res.data
@@ -84,11 +84,13 @@ export default function CourseForm() {
           
     } catch (error) {
       console.error('Error submitting form:', error);
+    } finally {
+        setLoading(false)
     }
   };
 
   return (
-    <Box maxW="md" mx="auto" mt={8} p={6} borderWidth={1} borderRadius="md">
+    <Box maxW="xl" mx="auto" mt={8} p={6} borderWidth={2} borderRadius="md">
       <form onSubmit={handleSubmit}>
         <FormControl id="desc" mb={4}>
           <FormLabel>i want to learn</FormLabel>
@@ -126,10 +128,11 @@ export default function CourseForm() {
             </NumberInputStepper>
             </NumberInput> weeks. </FormLabel>
         </FormControl>
-
-        <Button type="submit" colorScheme="teal" width="full">
-          Submit
-        </Button>
+        {
+            loading? <Progress size='xs' isIndeterminate /> : <Button type="submit" colorScheme="teal" width="full">
+                generate
+            </Button>
+        }
       </form>
     </Box>
   );

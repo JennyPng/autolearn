@@ -19,9 +19,10 @@ class Schedule:
             }
 
     class Week:
-        def __init__(self, week_index, topic, assignments, youtube_queries) -> None:
+        def __init__(self, week_index, topic, topic_overview, assignments, youtube_queries) -> None:
             self.week_index = week_index
             self.topic = topic
+            self.topic_overview = topic_overview
             self.assignments = [Schedule.Assignment(**assignment) for assignment in assignments]
             self.youtube_queries = youtube_queries
 
@@ -33,6 +34,7 @@ class Schedule:
             return {
                 'week_index': self.week_index,
                 'topic': self.topic,
+                'topic_overview': self.topic_overview,
                 'assignments': [assignment.to_dict() for assignment in self.assignments],
                 'youtube_queries': self.youtube_queries
             }
@@ -44,7 +46,7 @@ class Schedule:
     def to_dict(self) :
         return {
             'weeks': [week.to_dict() for week in self.weeks]
-        }
+        } 
 
     def __repr__(self):
         return f"Schedule(weeks={self.weeks!r})"

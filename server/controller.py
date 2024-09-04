@@ -1,17 +1,16 @@
 import flask 
 from analyze import query
-from video_finder import youtube_search2
+from video_finder import youtube_search
 from schedule import Schedule
 
 from testdata import course_examples
 
-def get_schedule(content):
-    sched : Schedule = query("Create a 3 week independent self-learning schedule about:" + content)
-
-    for week in sched.weeks:
+def test_util(weeks):
+   for week in weeks:
         print("---")
         print("WEEK: " + str(week.week_index))
         print("TOPIC: " + week.topic)
+        print(week.youtube_queries)
         for a in week.assignments: 
             print("ASSIGNMENT: " + a.title)
             queries = a.youtube_queries
@@ -19,11 +18,19 @@ def get_schedule(content):
                 print("QUERY: " + q)
                 hm = {}
                 hm['q'] = q
-                youtube_search2(hm)
+                print(youtube_search(hm))
             print()
-    return sched
 
-get_schedule(course_examples["system"])
+def get_schedule(content, level, weeks):
+    q = f"Create a {weeks} week independent self-learning schedule for someone at {level} level about:" + content
+    sched : Schedule = query(q)
+    print(q)
+    # test_util(sched.weeks)
+    return sched.to_dict()
 
+def get_videos(queries):
+    videos = [youtube_search(q) for q in queries]
+    print(videos)
+    return videos
 
-
+# get_schedule(course_examples["robot"])
