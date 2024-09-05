@@ -39,12 +39,16 @@ class Schedule:
                 'youtube_queries': self.youtube_queries
             }
 
-    def __init__(self, weeks) -> None:
+    def __init__(self, course_name, course_summary, weeks) -> None:
         self.raw = weeks
+        self.course_name = course_name
+        self.course_summary = course_summary
         self.weeks = [self.Week(**week) for week in weeks]
 
     def to_dict(self) :
         return {
+            'course_name': self.course_name,
+            'course_summary': self.course_summary,
             'weeks': [week.to_dict() for week in self.weeks]
         } 
 

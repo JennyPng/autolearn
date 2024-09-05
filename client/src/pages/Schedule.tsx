@@ -1,7 +1,5 @@
 import React, { useRef, useState } from "react";
 import {
-  Card,
-  CardBody,
   Heading,
   Box,
   Text,
@@ -10,11 +8,11 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
+  AspectRatio, 
   UnorderedList,
   ListItem,
   VStack,
   HStack,
-  Tag,
   Tabs,
   TabList,
   Tab,
@@ -25,6 +23,11 @@ import SearchTag from "../components/SearchTag";
 import { useLocation } from "react-router-dom";
 import { CourseFormState, ScheduleResponse } from "../components/CourseForm";
 import { Week, CourseSchedule } from "../types/ScheduleTypes";
+
+/*
+TODO
+store videos somehow, export a youtube playlist ... or just some text file of the schedule
+*/
 
 export default function Schedule() {
   // TODO, add row of skeleton videos when they're loading..
@@ -80,7 +83,6 @@ export default function Schedule() {
             <AccordionButton width={"100%"}>
               <Box as="span" flex="1" textAlign="left">
                 <Heading as="h2" size="md">
-                  {" "}
                   Week {week.week_index}: {week.topic}
                 </Heading>
               </Box>

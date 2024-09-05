@@ -19,3 +19,8 @@ export interface CourseSchedule {
   course_summary: string;
   weeks: Week[];
 }
+
+export interface VideoResult {
+  query: string,
+  url: string
+}
