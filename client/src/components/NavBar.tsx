@@ -1,12 +1,12 @@
-import React from 'react';
-import { Box, Flex, Text, Spacer, Link } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Box, Flex, Text, Spacer, Link } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
-    navigate('/'); 
+    navigate("/");
   };
 
   // TODO add footer

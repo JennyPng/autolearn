@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -11,11 +11,11 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Select,
-  Progress 
-} from '@chakra-ui/react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { CourseSchedule } from '../types/ScheduleTypes';
+  Progress,
+} from "@chakra-ui/react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { CourseSchedule } from "../types/ScheduleTypes";
 
 export interface CourseFormState {
   desc: string;
@@ -26,23 +26,23 @@ export interface CourseFormState {
 
 // TODO enforce api response type
 export interface ScheduleResponse {
-    desc: string,
-    schedule: CourseSchedule
+  desc: string;
+  schedule: CourseSchedule;
 }
 
 export default function CourseForm() {
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<CourseFormState>({
-    desc: '',
-    level: '',
+    desc: "",
+    level: "",
     weeks: 4,
-    scheduleResponse: undefined
+    scheduleResponse: undefined,
   });
 
   const navigate = useNavigate();
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     setFormData({
@@ -56,36 +56,41 @@ export default function CourseForm() {
       ...formData,
       weeks: parseInt(value, 10),
     });
-    console.log(value)
-
+    console.log(value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-        const res = await axios.get<ScheduleResponse>('http://127.0.0.1:8000/generate', {
-            params: { desc: formData.desc, level: formData.level, weeks: formData.weeks },
-          });
-          
-        setFormData({
-            ...formData,
-            scheduleResponse: res.data
-        });
+      const res = await axios.get<ScheduleResponse>(
+        "http://127.0.0.1:8000/generate",
+        {
+          params: {
+            desc: formData.desc,
+            level: formData.level,
+            weeks: formData.weeks,
+          },
+        },
+      );
 
-        navigate('/schedule', {
-            state: {
-              formData: {
-                ...formData,
-                scheduleResponse: res.data
-              }
-            }
-          });
-          
+      setFormData({
+        ...formData,
+        scheduleResponse: res.data,
+      });
+
+      navigate("/schedule", {
+        state: {
+          formData: {
+            ...formData,
+            scheduleResponse: res.data,
+          },
+        },
+      });
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     } finally {
-        setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -119,21 +124,32 @@ export default function CourseForm() {
         </FormControl>
 
         <FormControl id="weeks" mb={4}>
-          <FormLabel>over
-          <NumberInput width={"50%"} defaultValue={formData.weeks} min={1} max={20} onChange={(val) => handleWeeksChange(val)} >
-            <NumberInputField />
-            <NumberInputStepper>
-                <NumberIncrementStepper/>
+          <FormLabel>
+            over
+            <NumberInput
+              width={"50%"}
+              defaultValue={formData.weeks}
+              min={1}
+              max={20}
+              onChange={(val) => handleWeeksChange(val)}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
                 <NumberDecrementStepper />
-            </NumberInputStepper>
-            </NumberInput> weeks. </FormLabel>
+              </NumberInputStepper>
+            </NumberInput>{" "}
+            weeks.{" "}
+          </FormLabel>
         </FormControl>
-        {
-            loading? <Progress size='xs' isIndeterminate /> : <Button type="submit" colorScheme="teal" width="full">
-                generate
-            </Button>
-        }
+        {loading ? (
+          <Progress size="xs" isIndeterminate />
+        ) : (
+          <Button type="submit" colorScheme="teal" width="full">
+            generate
+          </Button>
+        )}
       </form>
     </Box>
   );
-};
+}
